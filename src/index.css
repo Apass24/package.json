@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+/* Dark casino-inspired theme tokens. */
+@theme {
+  --color-felt-950: #050a06;
+  --color-felt-900: #0a0f0a;
+  --color-felt-800: #0f1a12;
+  --color-felt-700: #16271b;
+  --color-felt-600: #1e3526;
+  --color-edge: #24402e;
+
+  --color-good: #22c55e;
+  --color-caution: #eab308;
+  --color-avoid: #ef4444;
+  --color-chip: #d4af37;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-felt-950);
+  color: #e7f0ea;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Respect iOS safe areas for the sticky header / footer. */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+/* Larger, thumb-friendly tap targets by default on interactive controls. */
+button,
+select,
+input {
+  font-size: 16px; /* prevents iOS zoom-on-focus */
+}
