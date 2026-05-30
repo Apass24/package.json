@@ -25,13 +25,13 @@ export default function PointSelector({ point, onSelect }: Props) {
           type="button"
           onClick={() => onSelect(null)}
           aria-pressed={point === null}
-          className={`col-span-1 h-14 rounded-lg font-bold text-sm transition-colors ${
+          className={`col-span-1 h-14 rounded-lg font-bold text-xs leading-tight px-1 transition-colors ${
             point === null
-              ? 'bg-[var(--color-chip)] text-felt-950 text-black'
+              ? 'bg-[var(--color-chip)] text-black'
               : 'bg-[var(--color-felt-700)] text-emerald-100 active:bg-[var(--color-felt-600)]'
           }`}
         >
-          Come-out
+          Come<wbr />-out
         </button>
         {POINTS.map((p) => (
           <button

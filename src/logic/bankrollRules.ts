@@ -49,8 +49,8 @@ export function isAtWinTarget(currentBankroll: number, winTarget: number): boole
  */
 export function isNearStopLoss(currentBankroll: number, stopLoss: number): boolean {
   if (isAtStopLoss(currentBankroll, stopLoss)) return false;
-  const buffer = Math.abs(stopLoss) * STOP_LOSS_PROXIMITY || stopLoss * STOP_LOSS_PROXIMITY;
-  const proximityThreshold = stopLoss + Math.max(buffer, stopLoss * STOP_LOSS_PROXIMITY);
+  // Band sits just above the stop-loss: within 20% of the stop-loss value.
+  const proximityThreshold = stopLoss + Math.abs(stopLoss) * STOP_LOSS_PROXIMITY;
   return currentBankroll <= proximityThreshold;
 }
 

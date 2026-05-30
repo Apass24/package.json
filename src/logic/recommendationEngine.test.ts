@@ -147,4 +147,72 @@ describe('evaluateSession', () => {
     expect(result.metrics.blendedHouseEdgePct).toBeCloseTo(0.705, 3);
     expect(totalExposure(state.bets)).toBe(20);
   });
+
+  it('flags over-cap exposure as avoid', () => {
+    // cap = 10% of 1000 = 100; place a 150 bet directly into state
+    const state = baseState({
+      phase: 'point',
+      point: 8,
+      bets: [{ id: 'x', type: 'pass-line', amount: 150 }],
+    });
+    const result = evaluateSession(state);
+    expect(
+      result.recommendations.some(
+        (r) => r.severity === 'avoid' && /exposure/i.test(r.title),
+      ),
+    ).toBe(true);
+  });
+
+  it('forces minimum sizing in the stop-loss proximity band', () => {
+    // stopLoss 700, threshold 840; 800 is in-band
+    const state = baseState({ currentBankroll: 800 });
+    const result = evaluateSession(state);
+    expect(
+      result.recommendations.some((r) => /size down/i.test(r.title)),
+    ).toBe(true);
+  });
+
+  it('does not double-stop: at stop-loss it returns a single walk-away rec', () => {
+    const state = baseState({ currentBankroll: 650 });
+    const result = evaluateSession(state);
+    expect(result.recommendations).toHaveLength(1);
+    expect(result.shouldWalkAway).toBe(true);
+  });
+
+  it('gives a healthy-state recommendation when nothing else applies', () => {
+    const state = baseState({
+      phase: 'point',
+      point: 4,
+      bets: [
+        { id: 'a', type: 'pass-line', amount: 10 },
+        { id: 'b', type: 'pass-odds', amount: 30 },
+        { id: 'c', type: 'place-6', amount: 12 },
+        { id: 'd', type: 'place-8', amount: 12 },
+      ],
+    });
+    const result = evaluateSession(state);
+    // No avoid/caution items expected for this disciplined, in-cap position.
+    expect(result.recommendations.every((r) => r.severity !== 'avoid')).toBe(true);
+  });
+
+  it('reports negative net and percentage when down', () => {
+    const state = baseState({ currentBankroll: 850 });
+    const result = evaluateSession(state);
+    expect(result.metrics.net).toBe(-150);
+    expect(result.metrics.netPct).toBeCloseTo(-15, 5);
+  });
+});
+
+describe('validateNewBet edge cases', () => {
+  it('rejects zero and negative amounts', () => {
+    const state = baseState();
+    expect(validateNewBet(state, 'pass-line', 0).ok).toBe(false);
+    expect(validateNewBet(state, 'pass-line', -10).ok).toBe(false);
+  });
+
+  it('blocks dont-pass on come-out only when below minimum, allows at minimum', () => {
+    const state = baseState();
+    expect(validateNewBet(state, 'dont-pass', 10).ok).toBe(true);
+    expect(validateNewBet(state, 'dont-pass', 9).ok).toBe(false);
+  });
 });

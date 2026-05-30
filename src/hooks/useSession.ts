@@ -12,12 +12,7 @@ import type {
   SessionState,
 } from '../types/craps';
 import { evaluateSession, validateNewBet } from '../logic/recommendationEngine';
-import {
-  appendHistory,
-  clearAll,
-  loadData,
-  saveSession,
-} from '../utils/localStorage';
+import { appendHistory, loadData, saveSession } from '../utils/localStorage';
 import { COME_OUT_ONLY_BETS } from '../types/craps';
 
 let betCounter = 0;
@@ -146,14 +141,6 @@ export function useSession(): UseSession {
   }, []);
 
   const clearError = useCallback(() => setLastError(null), []);
-
-  // Expose a reset hook for tests / dev tooling.
-  useEffect(() => {
-    return () => {
-      // no-op cleanup; clearAll available via endSession path
-      void clearAll;
-    };
-  }, []);
 
   return {
     session,

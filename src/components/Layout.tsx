@@ -24,7 +24,7 @@ export default function Layout({ sticky, children }: LayoutProps) {
         )}
       </header>
 
-      <main className="flex-1 mx-auto w-full max-w-2xl px-4 py-4 space-y-4 pb-28">
+      <main className="flex-1 mx-auto w-full max-w-2xl px-4 py-4 space-y-4 pb-40">
         {children}
       </main>
 
