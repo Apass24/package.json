@@ -6,10 +6,10 @@
   "description": "Private mobile-first decision-support tool for casino craps. Not a predictor; not a guarantee of winnings.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -p tsconfig.app.json && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "typecheck": "tsc -b",
+    "typecheck": "tsc -p tsconfig.app.json",
     "test": "vitest run",
     "test:watch": "vitest"
   },
